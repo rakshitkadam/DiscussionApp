@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.stabstudio.discussionapp.R;
 
 
