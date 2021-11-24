@@ -5,15 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.auth.api.Auth;
@@ -32,15 +31,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.stabstudio.discussionapp.Base.BaseActivity;
-import com.stabstudio.discussionapp.Models.User;
 import com.stabstudio.discussionapp.R;
-import com.stabstudio.discussionapp.utils.SharedPreferenceManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -94,25 +87,33 @@ public class GoogleSignInActivity extends FragmentActivity implements GoogleApiC
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+        Log.d(TAG, "90"  );
+
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+        Log.d(TAG, "97"  );
 
         mAuth = FirebaseAuth.getInstance();
         pref = getSharedPreferences("MetaData", Context.MODE_PRIVATE);
         editor = pref.edit();
         editor.putBoolean("LoggedIn", false);
         editor.commit();
+        Log.d(TAG, "104"  );
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             editor.putBoolean("LoggedIn", true);
             editor.commit();
+            Log.d(TAG, "110"  );
+
             Intent in = new Intent(this, HomeScreenActivity.class);
             startActivity(in);
         }
+        Log.d(TAG, "115"  );
+
     }
 
     @Override
@@ -126,10 +127,17 @@ public class GoogleSignInActivity extends FragmentActivity implements GoogleApiC
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            Log.d(TAG, "130"  );
+
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+                Log.d(TAG, "135"  );
+
             } else {
+
+                Log.d(TAG, "139"  );
+
                 hideProgressDialog();
             }
         }

@@ -5,11 +5,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,16 +63,18 @@ public class DiscussionFragment extends Fragment {
     @BindView(R.id.linlaHeaderProgress) LinearLayout progressLayout;
 
     public static ArrayList<Discussion> discussionList = new ArrayList<>();
-
     @Nullable
     @Override
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("fffffffd", "70"  );
         View vi = inflater.inflate(R.layout.fragment_discussion, container, false);
 
         ButterKnife.bind(this, vi);
 
         preferences = getActivity().getSharedPreferences("MetaData", Context.MODE_PRIVATE);
         editor = preferences.edit();
+        Log.d("fffffffd", "76"  );
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setTitle("Loading Discussions");
@@ -83,6 +87,7 @@ public class DiscussionFragment extends Fragment {
         layoutManager = new LinearLayoutManager(rv.getContext());
         rv.setHasFixedSize(true);
         rv.setLayoutManager(layoutManager);
+        Log.d("fffffffd", "89"  );
 
         refreshLayout = (SwipeRefreshLayout) vi.findViewById(R.id.dis_refreshlayout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -101,6 +106,8 @@ public class DiscussionFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         databaseRef = FirebaseDatabase.getInstance().getReference();
+        Log.d("fffffffd", "108"  );
+
         storageRef = FirebaseStorage.getInstance().getReference();
         loadDiscussions();
     }
@@ -111,6 +118,7 @@ public class DiscussionFragment extends Fragment {
         commentsRef = databaseRef.child("Comments");
         discussionsRef = databaseRef.child("Discussions");
         placeDisRef = databaseRef.child("place-discussion");
+        Log.d("fffffffd", "118"  );
 
         final String placeId = preferences.getString("user_place", "null");
 
@@ -122,6 +130,8 @@ public class DiscussionFragment extends Fragment {
                     Discussion discussion = snapshot.getValue(Discussion.class);
                     discussionList.add(discussion);
                 }
+                Log.d("fffffffd", "129"  );
+
                 adapter = new DiscussionsAdapter(getActivity());
                 rv.setAdapter(adapter);
                 //progressDialog.dismiss();
@@ -134,33 +144,13 @@ public class DiscussionFragment extends Fragment {
 
             }
         });
-
-        //Second Approach - Display discussions of a particular place
-
-        /*placeDisRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                discussionList.clear();
-                for(DataSnapshot snapshot : dataSnapshot.child(placeId).getChildren()){
-                    Discussion discussion = snapshot.getValue(Discussion.class)
-                    discussionList.add(discussion);
-                }
-                adapter = new DiscussionsAdapter(getActivity());
-                rv.setAdapter(adapter);
-                progressDialog.dismiss();
-                refreshLayout.setRefreshing(false);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
     }
 
     private List<String> getRandomSublist(String[] array, int amount) {
         ArrayList<String> list = new ArrayList<>(amount);
         Random random = new Random();
+        Log.d("fffffffd", "146"  );
+
         while (list.size() < amount) {
             list.add(array[random.nextInt(array.length)]);
         }

@@ -10,7 +10,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -19,6 +19,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 repositories {
@@ -34,17 +39,20 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-analytics'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    implementation 'com.jakewharton:butterknife:10.0.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:support-vector-drawable:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'androidx.appcompat:appcompat:1.0.0'
+    compile 'androidx.constraintlayout:constraintlayout:1.1.3'
+    compile 'com.google.android.material:material:1.0.0'
+    compile 'androidx.vectordrawable:vectordrawable:1.0.0'
+    compile 'androidx.legacy:legacy-support-v4:1.0.0'
+    compile 'androidx.cardview:cardview:1.0.0'
+    compile 'androidx.recyclerview:recyclerview:1.0.0'
 
     compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'com.google.firebase:firebase-database:10.0.1'

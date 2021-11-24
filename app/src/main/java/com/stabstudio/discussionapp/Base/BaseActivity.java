@@ -1,10 +1,8 @@
 package com.stabstudio.discussionapp.Base;
 
 import android.app.ProgressDialog;
-import android.support.annotation.VisibleForTesting;
-import android.support.v7.app.AppCompatActivity;
-
-import androidx.fragment.app.FragmentActivity;
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.stabstudio.discussionapp.R;
 
