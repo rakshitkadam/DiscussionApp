@@ -93,11 +93,6 @@ public class DiscussionsAdapter extends RecyclerView.Adapter<DiscussionsAdapter.
                 notifyDataSetChanged();
             }
         });
-
-        /*Glide.with(holder.mImageView.getContext())
-                .load(TestData.getRandomCheeseDrawable())
-                .fitCenter()
-                .into(holder.mImageView);*/
     }
 
     private void getUsernameAndPlace(final ViewHolder holder, final String userId, final String placeId){
@@ -119,7 +114,6 @@ public class DiscussionsAdapter extends RecyclerView.Adapter<DiscussionsAdapter.
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 Places place = dataSnapshot.child(placeId).getValue(Places.class);
-                Log.e("here",place.getAddress());
                 holder.address.setText(place.getAddress());
             }
             @Override
@@ -197,11 +191,6 @@ public class DiscussionsAdapter extends RecyclerView.Adapter<DiscussionsAdapter.
             commentsNo = (TextView) view.findViewById(R.id.comment_count);
             likeIcon = (ImageView) view.findViewById(R.id.like_icon);
         }
-
-        /*@Override
-        public String toString() {
-            return super.toString() + " '" + mTextView.getText();
-        }*/
     }
 
 }

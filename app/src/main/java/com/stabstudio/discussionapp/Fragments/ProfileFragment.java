@@ -74,9 +74,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.ll2) LinearLayout lastNameLl;
     @BindView(R.id.ll3) LinearLayout emailLl;
     @BindView(R.id.ll4) LinearLayout phoneLl;
-    @BindView(R.id.ll5) LinearLayout notiToggle;
     @BindView(R.id.ll6) LinearLayout logoutLl;
-    @BindView(R.id.noti) Switch aSwitch;
 
     private User snapshot;
     private String userId;
@@ -123,16 +121,6 @@ public class ProfileFragment extends Fragment {
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         storageRef = FirebaseStorage.getInstance().getReference();
 
-        notiToggle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(aSwitch.isChecked()){
-                    aSwitch.setChecked(false);
-                }else{
-                    aSwitch.setChecked(true);
-                }
-            }
-        });
 
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override

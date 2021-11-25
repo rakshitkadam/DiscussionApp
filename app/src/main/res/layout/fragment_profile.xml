@@ -195,105 +195,19 @@
             android:layout_height="0.5dp"
             android:background="@android:color/darker_gray"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="horizontal"
-            android:padding="18dp"
-            android:clickable="true"
-            android:background="?android:attr/selectableItemBackground">
 
-            <TextView
-                android:id="@+id/response"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="RESPONSE STATISTICS"
-                android:textColor="#F27227"
-                android:layout_gravity="center_vertical"
-                android:textSize="18dp"/>
-
-        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="@android:color/darker_gray"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight=".3"
-            android:padding="18dp"
-            android:clickable="true"
-            android:background="?android:attr/selectableItemBackground">
 
-            <TextView
-                android:id="@+id/timep"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Time Period"
-                android:textColor="#F27227"
-                android:layout_gravity="center_vertical"
-                android:textSize="18dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="-- Feb 16' --"
-                android:layout_gravity="center|center_vertical"
-                android:gravity="center"
-                android:background="@drawable/round_edit_text"/>
-
-            <View
-                android:layout_width="15dp"
-                android:layout_height="0.8dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="-- Jun 16' --"
-                android:layout_gravity="center|center_vertical"
-                android:gravity="center"
-                android:background="@drawable/round_edit_text"/>
-
-        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="@android:color/darker_gray"/>
-
-        <LinearLayout
-            android:id="@+id/ll5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:padding="18dp"
-            android:clickable="true"
-            android:background="?android:attr/selectableItemBackground">
-
-            <TextView
-                android:id="@+id/label5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:text="Push Notifications"
-                android:textColor="#F27227"
-                android:layout_gravity="center_vertical"
-                android:textSize="18dp"/>
-
-            <Switch
-                android:id="@+id/noti"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.2" />
-
-        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -322,11 +236,6 @@
 
         </LinearLayout>
 
-        <!--<View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@android:color/darker_gray"/>-->
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -338,7 +247,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Developed by Stabja Hazra"
+                android:text="Developed for educational purpose only  \n ~Rakshit Kadam"
                 android:gravity="center" />
 
         </LinearLayout>

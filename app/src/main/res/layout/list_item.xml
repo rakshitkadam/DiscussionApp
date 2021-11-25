@@ -28,22 +28,6 @@
                 android:layout_height="96dp"
                 android:layout_marginRight="10dp">
 
-                <!--<ImageView
-                    android:id="@+id/avatar"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
-                    android:maxHeight="72dp"
-                    android:maxWidth="72dp"
-                    android:src="@drawable/list_item_image" />-->
-
-                <!--<de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/avatar"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
-                    android:maxHeight="72dp"
-                    android:maxWidth="72dp"
-                    android:src="@drawable/list_item_image"/>-->
-
             </FrameLayout>
 
             <TextView

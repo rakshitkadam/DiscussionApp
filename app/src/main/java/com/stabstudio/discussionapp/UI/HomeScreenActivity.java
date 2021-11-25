@@ -156,24 +156,6 @@ public class HomeScreenActivity extends AppCompatActivity {
                 mSheetLayout.expandFab();
             }
         });
-        /*navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.navigation_home:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.viewpager, new DiscussionFragment()).commit();
-                        return true;
-                    case R.id.navigation_dashboard:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.viewpager, new ProfileFragment()).commit();
-                        return true;
-                    case R.id.navigation_notifications:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.viewpager, new SettingsFragment()).commit();
-                        return true;
-                }
-                return false;
-            }
-        });*/
     }
 
     @Override
@@ -192,7 +174,6 @@ public class HomeScreenActivity extends AppCompatActivity {
         Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(new DiscussionFragment(), "Discussions");
         adapter.addFragment(new ProfileFragment(), "Profile");
-        adapter.addFragment(new SettingsFragment(), "Notifications");
         viewPager.setAdapter(adapter);
         Log.d("fffffffd", "196"  );
     }
