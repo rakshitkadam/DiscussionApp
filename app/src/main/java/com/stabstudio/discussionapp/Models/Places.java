@@ -1,8 +1,5 @@
 package com.stabstudio.discussionapp.Models;
 
-/**
- * Created by HP on 24-05-2017.
- */
 
 public class Places {
 

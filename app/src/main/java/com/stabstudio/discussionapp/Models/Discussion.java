@@ -33,18 +33,18 @@ public class Discussion {
         this.comments = comments;
     }
 
-    /*public Discussion(String id, String place_id, String user_id, String subject, String photoUrl, String content, String timestamp, int likes, int comments, ArrayList<Comment> commentsList){
-        this.id = id;
-        this.place_id = place_id;
-        this.user_id = user_id;
-        this.subject = subject;
-        this.photoUrl = photoUrl;
-        this.content = content;
-        this.timestamp = timestamp;
-        this.likes = likes;
-        this.comments = comments;
-        this.commentsList = commentsList;
-    }*/
+//    public Discussion(String id, String place_id, String user_id, String subject, String photoUrl, String content, String timestamp, int likes, int comments, ArrayList<Comment> commentsList){
+//        this.id = id;
+//        this.place_id = place_id;
+//        this.user_id = user_id;
+//        this.subject = subject;
+//        this.photoUrl = photoUrl;
+//        this.content = content;
+//        this.timestamp = timestamp;
+//        this.likes = likes;
+//        this.comments = comments;
+//        this.commentsList = commentsList;
+//    }
 
     public String getId() {
         return id;

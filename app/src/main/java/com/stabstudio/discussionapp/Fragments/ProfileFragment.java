@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,7 +94,6 @@ public class ProfileFragment extends Fragment {
         userEmail = user.getEmail();
         userName = user.getDisplayName();
         defaultUri = user.getPhotoUrl();
-
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference riversRef = storageRef.child(userId + "/" + "profile_image.jpg");

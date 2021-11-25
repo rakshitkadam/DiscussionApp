@@ -3,6 +3,8 @@ package com.stabstudio.discussionapp.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -115,7 +117,9 @@ public class DiscussionsAdapter extends RecyclerView.Adapter<DiscussionsAdapter.
         placeRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 Places place = dataSnapshot.child(placeId).getValue(Places.class);
+                Log.e("here",place.getAddress());
                 holder.address.setText(place.getAddress());
             }
             @Override

@@ -8,6 +8,7 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -56,21 +57,41 @@ public class PlaceAutocompleteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_autocomplete);
-
+        Log.e("jdd","60");
         storageRef = FirebaseStorage.getInstance().getReference();
+        Log.e("jdd","62");
 
         firebaseAuth = FirebaseAuth.getInstance();
+        Log.e("jdd","65");
+
         firebaseUser = firebaseAuth.getCurrentUser();
+        Log.e("jdd","68");
+
         dRef = FirebaseDatabase.getInstance().getReference();
+        Log.e("jdd","71");
+
+
         placeRef = dRef.child("Places");
         usersRef = dRef.child("Users");
+        Log.e("jdd","76");
+
         final String userId = firebaseUser.getUid();
+
+        Log.e("iTAG",userId);
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Log.e("jdd","84");
+
                 User temp = dataSnapshot.child(userId).getValue(User.class);
+                Log.e("jdd",userId);
+                Log.e("jdd",temp.getFirst_name());
                 if(temp != null){
+
                     if(temp.getPlaceSet()){
+                        Log.e("jdd","89");
+
                         Intent in = new Intent(getApplicationContext(), HomeScreenActivity.class);
                         startActivity(in);
                         finish();
@@ -85,6 +106,7 @@ public class PlaceAutocompleteActivity extends AppCompatActivity {
 
         pref = getSharedPreferences("MetaData", Context.MODE_PRIVATE);
         editor = pref.edit();
+        Log.e("jdd","105");
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -95,6 +117,7 @@ public class PlaceAutocompleteActivity extends AppCompatActivity {
         autoTextView = (AutoCompleteTextView) findViewById(R.id.autocompleteEditTextView);
         arrayAdapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1, placesNameList);
         autoTextView.setThreshold(1);
+
         autoTextView.setAdapter(arrayAdapter);
         autoTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -102,6 +125,7 @@ public class PlaceAutocompleteActivity extends AppCompatActivity {
 
                 String user_id = firebaseUser.getUid();
                 String place_id = placesList.get(position).getId();
+                Log.e("Weird",place_id);
                 String photoUrl = firebaseUser.getPhotoUrl().toString();
                 String[] name = firebaseUser.getDisplayName().split(" ");
                 String first_name = name[0];
@@ -109,6 +133,7 @@ public class PlaceAutocompleteActivity extends AppCompatActivity {
                 String notificationToken = null;
 
                 uploadImage(firebaseUser.getPhotoUrl(), user_id);
+                Log.e("hey","jdd");
 
                 User newUser = new User(user_id, place_id, photoUrl, first_name, last_name, "", notificationToken);
                 newUser.setPlaceSet(true);
@@ -171,7 +196,9 @@ public class PlaceAutocompleteActivity extends AppCompatActivity {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Places place = snapshot.getValue(Places.class);
                     placesList.add(place);
+                    Log.e("TAG","here");
                     placesNameList.add(place.getAddress());
+                    Log.e("TAG",place.getAddress()+" ||| "+ place.getId());
                 }
                 autoCompleteFeature();
                 progressDialog.dismiss();

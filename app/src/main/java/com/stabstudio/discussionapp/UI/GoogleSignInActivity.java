@@ -97,6 +97,7 @@ public class GoogleSignInActivity extends FragmentActivity implements GoogleApiC
         Log.d(TAG, "97"  );
 
         mAuth = FirebaseAuth.getInstance();
+
         pref = getSharedPreferences("MetaData", Context.MODE_PRIVATE);
         editor = pref.edit();
         editor.putBoolean("LoggedIn", false);
@@ -104,7 +105,9 @@ public class GoogleSignInActivity extends FragmentActivity implements GoogleApiC
         Log.d(TAG, "104"  );
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
+////.................................................................
         if(currentUser != null){
+            //Not a first time user
             editor.putBoolean("LoggedIn", true);
             editor.commit();
             Log.d(TAG, "110"  );
@@ -133,11 +136,10 @@ public class GoogleSignInActivity extends FragmentActivity implements GoogleApiC
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
                 Log.d(TAG, "135"  );
+            }
 
-            } else {
-
+            else {
                 Log.d(TAG, "139"  );
-
                 hideProgressDialog();
             }
         }
@@ -159,21 +161,25 @@ public class GoogleSignInActivity extends FragmentActivity implements GoogleApiC
                             String place_id = null;
                             String photoUrl = firebaseUser.getPhotoUrl().toString();
                             String first_name = firebaseUser.getDisplayName();
+
                             String last_name = firebaseUser.getDisplayName();
                             //String notificationToken = SharedPreferenceManager.getInstance().getFcmToken();
-                            String notificationToken = null;
+                            String notificationToken = "nULl";
 
                             Map<String, Object> updateValues = new HashMap<>();
                             updateValues.put("id", id);
                             updateValues.put("place_id", place_id);
                             updateValues.put("photoUrl", photoUrl);
                             updateValues.put("first_name", first_name);
-                            updateValues.put("last_name", last_name);
+                            updateValues.put( "last_name", last_name);
                             updateValues.put("notificationToken", notificationToken);
-                            //dRef.child(firebaseUser.getUid()).updateChildren(updateValues);
+                            updateValues.put("placeSet",false);
+                            dRef.child(firebaseUser.getUid()).updateChildren(updateValues);
+                            Log.w(TAG, "175");
 
                             Intent in = new Intent(getApplicationContext(), PlaceAutocompleteActivity.class);
                             startActivity(in);
+                            Log.w(TAG,"DDD");
                         } else {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(GoogleSignInActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();

@@ -63,7 +63,8 @@ public class HomeScreenActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private String userId;
     private GoogleApiClient mGoogleApiClient;
-    private DatabaseReference mDatabaseRef;
+    private DatabaseReference
+            mDatabaseRef;
     private StorageReference mStorageRef;
     private SharedPreferences pref;
 
@@ -90,14 +91,16 @@ public class HomeScreenActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.child(userId).getValue(User.class);
-                String a = user.getFirst_name();
-                String b = user.getLast_name();
-                String c = user.getPlace_id();
-                editor.putString("first_name", a);
-                editor.putString("last_name", b);
-                editor.putString("user_place", c);
+                Log.e("what",userId);
+                String temp_first_name = user.getFirst_name();
+                String temp_second_name = user.getLast_name();
+                String temp_user_place = user.getPlace_id();
+
+                editor.putString("first_name", temp_first_name);
+                editor.putString("last_name", temp_second_name);
+                editor.putString("user_place", temp_user_place);
                 editor.putString("user_id", userId);
-                Log.d("fffffffd", "100"  );
+
                 editor.commit();
             }
 

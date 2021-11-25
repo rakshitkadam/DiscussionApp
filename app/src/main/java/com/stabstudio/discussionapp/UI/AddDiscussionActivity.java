@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -134,6 +135,7 @@ public class AddDiscussionActivity extends AppCompatActivity {
 
             String disId = disRef.push().getKey();
             String placeId = preferences.getString("user_place", "no_place");
+            Log.e("what",placeId);
             String userId = preferences.getString("user_id", "null");
 
             String timeStamp = DateTime.now().getSecondOfMinute() + "/" +
