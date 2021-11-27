@@ -57,41 +57,21 @@ public class PlaceAutocompleteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_autocomplete);
-        Log.e("jdd","60");
         storageRef = FirebaseStorage.getInstance().getReference();
-        Log.e("jdd","62");
-
         firebaseAuth = FirebaseAuth.getInstance();
-        Log.e("jdd","65");
-
         firebaseUser = firebaseAuth.getCurrentUser();
-        Log.e("jdd","68");
-
         dRef = FirebaseDatabase.getInstance().getReference();
-        Log.e("jdd","71");
-
-
         placeRef = dRef.child("Places");
         usersRef = dRef.child("Users");
-        Log.e("jdd","76");
 
         final String userId = firebaseUser.getUid();
 
-        Log.e("iTAG",userId);
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-                Log.e("jdd","84");
-
                 User temp = dataSnapshot.child(userId).getValue(User.class);
-                Log.e("jdd",userId);
-                Log.e("jdd",temp.getFirst_name());
                 if(temp != null){
-
                     if(temp.getPlaceSet()){
-                        Log.e("jdd","89");
-
                         Intent in = new Intent(getApplicationContext(), HomeScreenActivity.class);
                         startActivity(in);
                         finish();
@@ -106,8 +86,6 @@ public class PlaceAutocompleteActivity extends AppCompatActivity {
 
         pref = getSharedPreferences("MetaData", Context.MODE_PRIVATE);
         editor = pref.edit();
-        Log.e("jdd","105");
-
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
         progressDialog.show();
@@ -133,8 +111,6 @@ public class PlaceAutocompleteActivity extends AppCompatActivity {
                 String notificationToken = null;
 
                 uploadImage(firebaseUser.getPhotoUrl(), user_id);
-                Log.e("hey","jdd");
-
                 User newUser = new User(user_id, place_id, photoUrl, first_name, last_name, "", notificationToken);
                 newUser.setPlaceSet(true);
                 usersRef.child(firebaseUser.getUid()).setValue(newUser);
@@ -151,10 +127,6 @@ public class PlaceAutocompleteActivity extends AppCompatActivity {
     private void uploadImage(Uri imageFile, String userId){
         if(imageFile != null){
             final ProgressDialog progressDialog = new ProgressDialog(this);
-            //progressDialog.setTitle("Updating");
-            //progressDialog.setMessage("Updating Profile Pic...");
-            //progressDialog.setCancelable(false);
-            //progressDialog.show();
             storageRef = FirebaseStorage.getInstance().getReference();
             StorageReference riversRef = storageRef.child(userId + "/" + "profile_image.jpg");
             riversRef.putFile(imageFile)
@@ -162,21 +134,17 @@ public class PlaceAutocompleteActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            //Toast.makeText(getActivity(), "File Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            //Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            //double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                            //progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
                         }
                     });
         }
@@ -196,9 +164,7 @@ public class PlaceAutocompleteActivity extends AppCompatActivity {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Places place = snapshot.getValue(Places.class);
                     placesList.add(place);
-                    Log.e("TAG","here");
                     placesNameList.add(place.getAddress());
-                    Log.e("TAG",place.getAddress()+" ||| "+ place.getId());
                 }
                 autoCompleteFeature();
                 progressDialog.dismiss();

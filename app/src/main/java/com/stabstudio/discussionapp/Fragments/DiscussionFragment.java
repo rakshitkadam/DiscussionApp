@@ -121,8 +121,6 @@ public class DiscussionFragment extends Fragment {
                 discussionList.clear();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Discussion discussion = snapshot.getValue(Discussion.class);
-                    Log.e("111",userId);
-                    Log.e("111",discussion.getVisibleToID());
                     if(discussion.getVisibleToID().contains(userId)) {
                         discussionList.add(discussion);
                     }
@@ -131,7 +129,6 @@ public class DiscussionFragment extends Fragment {
                 Collections.reverse(discussionList);
                 adapter = new DiscussionsAdapter(getActivity());
                 rv.setAdapter(adapter);
-                //progressDialog.dismiss();
                 progressLayout.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
             }

@@ -54,7 +54,6 @@ public class HomeScreenActivity extends AppCompatActivity {
     private ActionBar actionBar;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    //@BindView(R.id.nav_view) NavigationView navigationView;
     @BindView(R.id.viewpager) ViewPager viewPager;
     @BindView(R.id.tabs) TabLayout tabLayout;
     @BindView(R.id.bottom_sheet) SheetLayout mSheetLayout;
@@ -91,7 +90,6 @@ public class HomeScreenActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.child(userId).getValue(User.class);
-                Log.e("what",userId);
                 String temp_first_name = user.getFirst_name();
                 String temp_second_name = user.getLast_name();
                 String temp_user_place = user.getPlace_id();
@@ -117,7 +115,6 @@ public class HomeScreenActivity extends AppCompatActivity {
             public void onFabAnimationEnd() {
                 Intent intent = new Intent(getApplicationContext(), AddDiscussionActivity.class);
                 startActivityForResult(intent, 300);
-                Log.d("fffffffd", "118"  );
                 overridePendingTransition(R.anim.slide_in_up, R.anim.still);
             }
         });
@@ -126,26 +123,12 @@ public class HomeScreenActivity extends AppCompatActivity {
     }
 
     private void setupFrontend(){
-        //toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //navigationView = (NavigationView) findViewById(R.id.nav_view);
-        //viewPager = (ViewPager) findViewById(R.id.viewpager);
-        //tabLayout = (TabLayout) findViewById(R.id.tabs);
-        //fab = (FloatingActionButton) findViewById(R.id.fab);
+
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        /*if (navigationView != null) {
-            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(MenuItem menuItem) {
-                    menuItem.setChecked(true);
-                    mDrawerLayout.closeDrawers();
-                    return true;
-                }
-            });
-        }*/
+
         if (viewPager != null) {
             setupViewPager(viewPager);
         }

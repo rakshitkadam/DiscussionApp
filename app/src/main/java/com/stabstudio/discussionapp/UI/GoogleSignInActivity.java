@@ -87,14 +87,11 @@ public class GoogleSignInActivity extends FragmentActivity implements GoogleApiC
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-        Log.d(TAG, "90"  );
-
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-        Log.d(TAG, "97"  );
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -102,26 +99,19 @@ public class GoogleSignInActivity extends FragmentActivity implements GoogleApiC
         editor = pref.edit();
         editor.putBoolean("LoggedIn", false);
         editor.commit();
-        Log.d(TAG, "104"  );
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-////.................................................................
-        if(currentUser != null){
+        if(currentUser != null) {
             //Not a first time user
             editor.putBoolean("LoggedIn", true);
             editor.commit();
-            Log.d(TAG, "110"  );
-
             Intent in = new Intent(this, HomeScreenActivity.class);
             startActivity(in);
         }
-        Log.d(TAG, "115"  );
-
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
@@ -130,23 +120,19 @@ public class GoogleSignInActivity extends FragmentActivity implements GoogleApiC
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            Log.d(TAG, "130"  );
 
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-                Log.d(TAG, "135"  );
             }
 
             else {
-                Log.d(TAG, "139"  );
                 hideProgressDialog();
             }
         }
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         showProgressDialog();
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -163,8 +149,7 @@ public class GoogleSignInActivity extends FragmentActivity implements GoogleApiC
                             String first_name = firebaseUser.getDisplayName();
 
                             String last_name = firebaseUser.getDisplayName();
-                            //String notificationToken = SharedPreferenceManager.getInstance().getFcmToken();
-                            String notificationToken = "nULl";
+                            String notificationToken = "NULL";
 
                             Map<String, Object> updateValues = new HashMap<>();
                             updateValues.put("id", id);
@@ -175,13 +160,10 @@ public class GoogleSignInActivity extends FragmentActivity implements GoogleApiC
                             updateValues.put("notificationToken", notificationToken);
                             updateValues.put("placeSet",false);
                             dRef.child(firebaseUser.getUid()).updateChildren(updateValues);
-                            Log.w(TAG, "175");
 
                             Intent in = new Intent(getApplicationContext(), PlaceAutocompleteActivity.class);
                             startActivity(in);
-                            Log.w(TAG,"DDD");
                         } else {
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(GoogleSignInActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                             hideProgressDialog();
                         }

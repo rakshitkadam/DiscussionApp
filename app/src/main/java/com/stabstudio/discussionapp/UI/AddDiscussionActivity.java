@@ -64,9 +64,8 @@ public class AddDiscussionActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
 
     private ProgressDialog progressDialog;
-    private Uri imageFile;
     private String userId;
-    private String usersVisible[]; //fill this string with all visible user
+    private String usersVisible[];
     private int totalNumberOfUsers;
     private boolean chosenVisibleUsers[];
     private ArrayList<Integer> finalListOfChosenUsers;
@@ -76,7 +75,6 @@ public class AddDiscussionActivity extends AppCompatActivity {
     @BindView(R.id.dis_topic) EditText topic;
     @BindView(R.id.dis_content) EditText content;
     @BindView(R.id.dis_image) TextView showPeople;
-    //@BindView(R.id.dis_date) TextView dateView;
     @BindView(R.id.post_discussion) Button publish;
 
     private int mYear;
@@ -122,14 +120,11 @@ public class AddDiscussionActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
 
-        for(int i=0;i<idOfUsers.size();i++)
-        {
+        for(int i=0;i<idOfUsers.size();i++) {
             usersVisible[i] = idOfUsers.get(i);
-            Log.e("1234",usersVisible[i]);
         }
         showPeople.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +132,6 @@ public class AddDiscussionActivity extends AppCompatActivity {
                 showPeopleChooser();
             }
         });
-        Log.e("1234","127");
         publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,7 +151,6 @@ public class AddDiscussionActivity extends AppCompatActivity {
                         mYear = year;
                         mMonth++;
                         String dateStr = mMonth + "," + mDay + "," + mYear;
-                        //dateView.setText(dateStr);
                     }
                 };
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, mDateSetListener, mYear, mMonth, mDay);
@@ -167,33 +160,22 @@ public class AddDiscussionActivity extends AppCompatActivity {
     private void publishDiscussion(){
         String topicStr = topic.getText().toString();
         String contentStr = content.getText().toString();
-        Log.e("1234","156");
         if(!TextUtils.isEmpty(topicStr) && !TextUtils.isEmpty(contentStr) && finalListOfChosenUsers.size()!=0){
             progressDialog.show();
-//            String imagePath = uploadImage();
-
-              String visibleUsersId = "";
-
-              for(int i=0;i<finalListOfChosenUsers.size();i++) {
+            String visibleUsersId = "";
+            for(int i=0;i<finalListOfChosenUsers.size();i++) {
                   visibleUsersId  += idOfUsers.get(finalListOfChosenUsers.get(i)) + ",";
-
               }
-
             DatabaseReference disRef = dRef.child("Discussions");
-
-
             String placeId = preferences.getString("user_place", "no_place");
             String disId = disRef.push().getKey();
             String userId = preferences.getString("user_id", "null");
-
             String timeStamp = DateTime.now().getSecondOfMinute() + "/" +
                                DateTime.now().getMinuteOfHour() + "/" +
                                DateTime.now().getHourOfDay() + "/" +
                                DateTime.now().getDayOfMonth() + "/" +
                                DateTime.now().getMonthOfYear() + "/" +
                                DateTime.now().getYear();
-
-            Log.e("123",visibleUsersId);
             Discussion newDiscussion = new Discussion(disId, placeId, userId, topicStr, visibleUsersId, contentStr, timeStamp, 0, 0);
 
             disRef.child(disId).setValue(newDiscussion);
@@ -201,20 +183,14 @@ public class AddDiscussionActivity extends AppCompatActivity {
             progressDialog.dismiss();
             Toast.makeText(getApplicationContext(), "Discussion Published", Toast.LENGTH_SHORT).show();
             finish();
-        }else{
+        }
+        else{
             Toast.makeText(getApplicationContext(), "Please fill all the values", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void showPeopleChooser(){
-//        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        pickIntent.setType("image/*");
-//        Intent chooserIntent = Intent.createChooser(pickIntent, "Select Image");
-//        //chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-//        startActivityForResult(chooserIntent, 100);
-        Log.e("1234","200");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        Log.e("1234","1562");
         builder.setTitle("Choose people who can see it");
         builder.setCancelable(false);
         finalListOfChosenUsers.clear();
@@ -227,8 +203,6 @@ public class AddDiscussionActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                 if(isChecked) {
-
-                    Log.e("get","here");
                     if(finalListOfChosenUsers.contains(which)==false) {
                         finalListOfChosenUsers.add(which);
                     }
@@ -254,9 +228,7 @@ public class AddDiscussionActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finalListOfChosenUsers.clear();
-//                dialog.dismiss();
-            }
+                finalListOfChosenUsers.clear(); }
         });
         builder.setNeutralButton("Select All", new DialogInterface.OnClickListener() {
             @Override
@@ -270,50 +242,11 @@ public class AddDiscussionActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private String uploadImage(){
-        if(imageFile != null){
-            final StorageReference riversRef = sRef.child(userId + "/" + imageFile.getLastPathSegment() + ".jpg");
-            riversRef.putFile(imageFile)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            //Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            //double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                            //progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
-                        }
-                    });
-            return riversRef.getDownloadUrl().toString();
-        }
-        else{
-            Toast.makeText(this, "Please try again", Toast.LENGTH_SHORT).show();
-            return null;
-        }
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
     }
-    //  My  edit
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode == 100 && resultCode == RESULT_OK && data != null){
-//            imageFile = data.getData();
-//            image.setImageURI(imageFile);
-//        }
-//    }
+
 
     @Override
     public void onBackPressed() {
