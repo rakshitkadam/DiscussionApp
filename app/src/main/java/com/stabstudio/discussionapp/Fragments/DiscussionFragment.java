@@ -31,6 +31,7 @@ import com.stabstudio.discussionapp.Models.Discussion;
 import com.stabstudio.discussionapp.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -44,6 +45,7 @@ public class DiscussionFragment extends Fragment {
     private FirebaseUser user;
     private DatabaseReference databaseRef;
     private StorageReference storageRef;
+    private String userId;
 
     private DatabaseReference usersRef;
     private DatabaseReference placesRef;
@@ -57,6 +59,7 @@ public class DiscussionFragment extends Fragment {
     private RecyclerView rv;
     private SwipeRefreshLayout refreshLayout;
 
+
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
 
@@ -67,28 +70,20 @@ public class DiscussionFragment extends Fragment {
     @Override
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("fffffffd", "70"  );
         View vi = inflater.inflate(R.layout.fragment_discussion, container, false);
-
         ButterKnife.bind(this, vi);
 
         preferences = getActivity().getSharedPreferences("MetaData", Context.MODE_PRIVATE);
         editor = preferences.edit();
-        Log.d("fffffffd", "76"  );
-
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setTitle("Loading Discussions");
         progressDialog.setMessage("Please Wait...");
         progressDialog.setCancelable(false);
-        //progressDialog.show();
         progressLayout.setVisibility(View.VISIBLE);
-
         rv = (RecyclerView) vi.findViewById(R.id.discussion_recycler_view);
         layoutManager = new LinearLayoutManager(rv.getContext());
         rv.setHasFixedSize(true);
         rv.setLayoutManager(layoutManager);
-        Log.d("fffffffd", "89"  );
-
         refreshLayout = (SwipeRefreshLayout) vi.findViewById(R.id.dis_refreshlayout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -106,39 +101,40 @@ public class DiscussionFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         databaseRef = FirebaseDatabase.getInstance().getReference();
-        Log.d("fffffffd", "108"  );
-
         storageRef = FirebaseStorage.getInstance().getReference();
+        userId = user.getUid();
         loadDiscussions();
     }
 
     private void loadDiscussions(){
         usersRef = databaseRef.child("Users");
+
         placesRef = databaseRef.child("Places");
         commentsRef = databaseRef.child("Comments");
         discussionsRef = databaseRef.child("Discussions");
         placeDisRef = databaseRef.child("place-discussion");
-        Log.d("fffffffd", "118"  );
-
         final String placeId = preferences.getString("user_place", "null");
-
+        Boolean ok = false;
         discussionsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 discussionList.clear();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Discussion discussion = snapshot.getValue(Discussion.class);
-                    discussionList.add(discussion);
+                    Log.e("111",userId);
+                    Log.e("111",discussion.getVisibleToID());
+                    if(discussion.getVisibleToID().contains(userId)) {
+                        discussionList.add(discussion);
+                    }
                 }
-                Log.d("fffffffd", "129"  );
 
+                Collections.reverse(discussionList);
                 adapter = new DiscussionsAdapter(getActivity());
                 rv.setAdapter(adapter);
                 //progressDialog.dismiss();
                 progressLayout.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -149,8 +145,6 @@ public class DiscussionFragment extends Fragment {
     private List<String> getRandomSublist(String[] array, int amount) {
         ArrayList<String> list = new ArrayList<>(amount);
         Random random = new Random();
-        Log.d("fffffffd", "146"  );
-
         while (list.size() < amount) {
             list.add(array[random.nextInt(array.length)]);
         }

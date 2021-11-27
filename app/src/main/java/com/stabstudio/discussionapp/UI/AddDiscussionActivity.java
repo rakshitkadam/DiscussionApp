@@ -1,8 +1,11 @@
 package com.stabstudio.discussionapp.UI;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -19,24 +22,37 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.stabstudio.discussionapp.Models.Discussion;
+import com.stabstudio.discussionapp.Models.User;
 import com.stabstudio.discussionapp.R;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.stabstudio.discussionapp.Fragments.DiscussionFragment.discussionList;
 
 public class AddDiscussionActivity extends AppCompatActivity {
 
@@ -50,10 +66,16 @@ public class AddDiscussionActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private Uri imageFile;
     private String userId;
+    private String usersVisible[]; //fill this string with all visible user
+    private int totalNumberOfUsers;
+    private boolean chosenVisibleUsers[];
+    private ArrayList<Integer> finalListOfChosenUsers;
+    private ArrayList<String>namesOfStudents;
+    private ArrayList<String>idOfUsers;
 
     @BindView(R.id.dis_topic) EditText topic;
     @BindView(R.id.dis_content) EditText content;
-    @BindView(R.id.dis_image) ImageView image;
+    @BindView(R.id.dis_image) TextView showPeople;
     //@BindView(R.id.dis_date) TextView dateView;
     @BindView(R.id.post_discussion) Button publish;
 
@@ -83,20 +105,39 @@ public class AddDiscussionActivity extends AppCompatActivity {
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
 
-        image.setOnClickListener(new View.OnClickListener() {
+        idOfUsers = new ArrayList<String>();
+        finalListOfChosenUsers = new ArrayList<Integer>();
+        namesOfStudents = new ArrayList<String>();
+        totalNumberOfUsers = 0;
+        dRef.child("Users").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                showImageChooser();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    User user = snapshot.getValue(User.class);
+                    idOfUsers.add(user.getId());
+                    namesOfStudents.add(user.getFirst_name()+" "+user.getLast_name());
+                    totalNumberOfUsers++;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
 
-        /*dateView.setOnClickListener(new View.OnClickListener() {
+        for(int i=0;i<idOfUsers.size();i++)
+        {
+            usersVisible[i] = idOfUsers.get(i);
+            Log.e("1234",usersVisible[i]);
+        }
+        showPeople.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getDate();
+                showPeopleChooser();
             }
-        });*/
-
+        });
+        Log.e("1234","127");
         publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,16 +167,23 @@ public class AddDiscussionActivity extends AppCompatActivity {
     private void publishDiscussion(){
         String topicStr = topic.getText().toString();
         String contentStr = content.getText().toString();
-        if(!TextUtils.isEmpty(topicStr) && !TextUtils.isEmpty(contentStr) && imageFile != null){
+        Log.e("1234","156");
+        if(!TextUtils.isEmpty(topicStr) && !TextUtils.isEmpty(contentStr) && finalListOfChosenUsers.size()!=0){
             progressDialog.show();
-            String imagePath = uploadImage();
+//            String imagePath = uploadImage();
+
+              String visibleUsersId = "";
+
+              for(int i=0;i<finalListOfChosenUsers.size();i++) {
+                  visibleUsersId  += idOfUsers.get(finalListOfChosenUsers.get(i)) + ",";
+
+              }
 
             DatabaseReference disRef = dRef.child("Discussions");
-            DatabaseReference placeDisRef = dRef.child("place-discussion");
 
-            String disId = disRef.push().getKey();
+
             String placeId = preferences.getString("user_place", "no_place");
-            Log.e("what",placeId);
+            String disId = disRef.push().getKey();
             String userId = preferences.getString("user_id", "null");
 
             String timeStamp = DateTime.now().getSecondOfMinute() + "/" +
@@ -145,9 +193,10 @@ public class AddDiscussionActivity extends AppCompatActivity {
                                DateTime.now().getMonthOfYear() + "/" +
                                DateTime.now().getYear();
 
-            Discussion newDiscussion = new Discussion(disId, placeId, userId, topicStr, imagePath, contentStr, timeStamp, 0, 0);
+            Log.e("123",visibleUsersId);
+            Discussion newDiscussion = new Discussion(disId, placeId, userId, topicStr, visibleUsersId, contentStr, timeStamp, 0, 0);
+
             disRef.child(disId).setValue(newDiscussion);
-            placeDisRef.child(placeId).child(disId).setValue(newDiscussion);
 
             progressDialog.dismiss();
             Toast.makeText(getApplicationContext(), "Discussion Published", Toast.LENGTH_SHORT).show();
@@ -157,12 +206,68 @@ public class AddDiscussionActivity extends AppCompatActivity {
         }
     }
 
-    private void showImageChooser(){
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickIntent.setType("image/*");
-        Intent chooserIntent = Intent.createChooser(pickIntent, "Select Image");
-        //chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-        startActivityForResult(chooserIntent, 100);
+    private void showPeopleChooser(){
+//        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        pickIntent.setType("image/*");
+//        Intent chooserIntent = Intent.createChooser(pickIntent, "Select Image");
+//        //chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+//        startActivityForResult(chooserIntent, 100);
+        Log.e("1234","200");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        Log.e("1234","1562");
+        builder.setTitle("Choose people who can see it");
+        builder.setCancelable(false);
+        finalListOfChosenUsers.clear();
+        usersVisible = new String[idOfUsers.size()];
+        for(int i=0;i<idOfUsers.size();i++)
+        {
+            usersVisible[i] = namesOfStudents.get(i);
+        }
+        builder.setMultiChoiceItems(usersVisible, chosenVisibleUsers, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                if(isChecked) {
+
+                    Log.e("get","here");
+                    if(finalListOfChosenUsers.contains(which)==false) {
+                        finalListOfChosenUsers.add(which);
+                    }
+                }
+                else {
+                    int getIndex = -1;
+                    for(int i=0;i<finalListOfChosenUsers.size();i++) {
+                        if(finalListOfChosenUsers.get(i)==which){
+                            getIndex = i;
+                        }
+                    }
+                    if(getIndex!=-1)
+                        finalListOfChosenUsers.remove(getIndex);
+                }
+            }
+        });
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finalListOfChosenUsers.clear();
+//                dialog.dismiss();
+            }
+        });
+        builder.setNeutralButton("Select All", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finalListOfChosenUsers.clear();
+                for(int i=0;i<totalNumberOfUsers;i++){
+                    finalListOfChosenUsers.add(i);
+                }
+            }
+        });
+        builder.show();
     }
 
     private String uploadImage(){
@@ -200,15 +305,15 @@ public class AddDiscussionActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 100 && resultCode == RESULT_OK && data != null){
-            imageFile = data.getData();
-            image.setImageURI(imageFile);
-        }
-    }
+    //  My  edit
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(requestCode == 100 && resultCode == RESULT_OK && data != null){
+//            imageFile = data.getData();
+//            image.setImageURI(imageFile);
+//        }
+//    }
 
     @Override
     public void onBackPressed() {

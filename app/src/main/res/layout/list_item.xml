@@ -38,7 +38,7 @@
                 android:layout_toRightOf="@id/image_container"
                 android:text="Time to clean the streets"
                 android:textColor="#222"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -48,7 +48,7 @@
                 android:layout_below="@id/dis_subject"
                 android:layout_toRightOf="@id/image_container"
                 android:text="David Franco"
-                android:textSize="11sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/dis_timestamp"
@@ -68,7 +68,7 @@
                 android:text="Palo Alto"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:layout_alignTop="@+id/like_count"
+                android:layout_alignTop="@+id/comment_count"
                 android:layout_toEndOf="@+id/image_container" />
 
             <ImageView
@@ -78,7 +78,7 @@
                 android:layout_marginRight="2dp"
                 app:srcCompat="@drawable/ic_like_icon"
                 android:layout_alignBottom="@+id/image_container"
-                android:layout_toStartOf="@+id/like_count" />
+                android:layout_toStartOf="@+id/comment_count" />
 
             <TextView
                 android:id="@+id/like_count"
@@ -87,6 +87,7 @@
                 android:layout_alignBottom="@+id/like_icon"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="2dp"
+                android:textColor="@color/white_card"
                 android:layout_toStartOf="@+id/comment_icon"
                 android:gravity="center"
                 android:text="250"
@@ -98,7 +99,8 @@
                 android:layout_height="15dp"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="2dp"
-                app:srcCompat="@drawable/ic_mode_comment"
+                app:srcCompat="@drawable/cheese_1"
+                android:tint="@color/transparent"
                 android:layout_alignBottom="@+id/like_count"
                 android:layout_toStartOf="@+id/comment_count" />
 
@@ -107,24 +109,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="50"
+                android:textColor="@color/white_card"
                 android:textSize="12sp"
                 android:layout_alignTop="@+id/comment_icon"
                 android:layout_alignParentEnd="true" />
 
-            <!--<TextView
-                android:text="Category"
-                android:id="@+id/newsCategory"
-                android:textAllCaps="true"
-                android:textAlignment="textEnd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:layout_gravity="end|right"
-                android:layout_alignBottom="@+id/comment_icon"
-                android:layout_alignParentEnd="true"
-                android:layout_toEndOf="@+id/comment_count" />-->
 
         </RelativeLayout>
 

@@ -96,7 +96,7 @@ public class DiscussionsAdapter extends RecyclerView.Adapter<DiscussionsAdapter.
     }
 
     private void getUsernameAndPlace(final ViewHolder holder, final String userId, final String placeId){
-        usersRef = FirebaseDatabase.getInstance() .getReference().child("Users");
+        usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         placeRef = FirebaseDatabase.getInstance().getReference().child("Places");
 
         usersRef.addValueEventListener(new ValueEventListener() {

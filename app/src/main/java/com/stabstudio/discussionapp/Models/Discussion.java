@@ -1,8 +1,13 @@
 package com.stabstudio.discussionapp.Models;
 
+import android.util.Log;
+
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class Discussion {
@@ -11,7 +16,7 @@ public class Discussion {
     private String place_id;
     private String user_id;
     private String subject;
-    private String photoUrl;
+    private String visibleToID;
     private String content;
     private String timestamp;
     private int likes;
@@ -20,12 +25,12 @@ public class Discussion {
     public Discussion(){
     }
 
-    public Discussion(String id, String place_id, String user_id, String subject, String photoUrl, String content, String timestamp, int likes, int comments){
+    public Discussion(String id, String place_id, String user_id, String subject, String visibleTo, String content, String timestamp, int likes, int comments) {
         this.id = id;
         this.place_id = place_id;
         this.user_id = user_id;
         this.subject = subject;
-        this.photoUrl = photoUrl;
+        this.visibleToID = visibleTo;
         this.content = content;
         this.timestamp = timestamp;
         this.likes = likes;
@@ -36,6 +41,9 @@ public class Discussion {
         return id;
     }
 
+    public String getVisibleToID() {
+        return visibleToID;
+    }
     public void setId(String id) {
         this.id = id;
     }
@@ -62,14 +70,6 @@ public class Discussion {
 
     public void setSubject(String subject) {
         this.subject = subject;
-    }
-
-    public String getPhotoUrl() {
-        return photoUrl;
-    }
-
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
     }
 
     public String getContent() {
@@ -111,5 +111,4 @@ public class Discussion {
     public void decrementLike(){
         this.likes--;
     }
-
 }

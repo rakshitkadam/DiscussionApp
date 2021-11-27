@@ -110,8 +110,8 @@ public class DiscussionActivity extends AppCompatActivity {
         });
     }
 
-    private void postComment(){                                         //Commenting System
-        if(!TextUtils.isEmpty(commentText.getText().toString())){       //The most complicated part
+    private void postComment(){
+        if(!TextUtils.isEmpty(commentText.getText().toString())){
 
             dRef = FirebaseDatabase.getInstance().getReference();
             DatabaseReference commentRef = dRef.child("Comments");
@@ -126,7 +126,6 @@ public class DiscussionActivity extends AppCompatActivity {
 
             String commentStr = commentText.getText().toString();
             String author = preferences.getString("first_name", "Anonymous");
-
             String commId = dissCommRef.child(discussionId).push().getKey();
             Comment comment = new Comment(commId, discussionId, author, commentStr, timeStamp);
             dissCommRef.child(discussionId).child(commId).setValue(comment);
@@ -154,7 +153,6 @@ public class DiscussionActivity extends AppCompatActivity {
                 }
                 adapter = new CommentsAdapter(DiscussionActivity.this, commentsList);
                 recyclerView.setAdapter(adapter);
-                //Toast.makeText(DiscussionActivity.this, "Comments Loaded", Toast.LENGTH_SHORT).show();
             }
 
             @Override
