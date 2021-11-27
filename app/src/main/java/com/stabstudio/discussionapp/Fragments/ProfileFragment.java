@@ -1,6 +1,7 @@
 package com.stabstudio.discussionapp.Fragments;
 
 
+import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -44,9 +45,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.stabstudio.discussionapp.Models.Discussion;
 import com.stabstudio.discussionapp.Models.Places;
 import com.stabstudio.discussionapp.Models.User;
 import com.stabstudio.discussionapp.R;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,6 +69,7 @@ public class ProfileFragment extends Fragment {
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
 
+
     @BindView(R.id.first_name) TextView firstName;
     @BindView(R.id.last_name) TextView lastName;
     @BindView(R.id.user_email) TextView email;
@@ -77,11 +82,13 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.ll6) LinearLayout logoutLl;
 
     private User snapshot;
+    private Places snapshotPlace;
     private String userId;
     private String userEmail;
     private String userName;
     private Uri imageFile;
     private Uri defaultUri;
+    private HashMap<String,String>idToCity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,7 +100,23 @@ public class ProfileFragment extends Fragment {
         userName = user.getDisplayName();
         defaultUri = user.getPhotoUrl();
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        placesRef = FirebaseDatabase.getInstance().getReference().child("Places");
         storageRef = FirebaseStorage.getInstance().getReference();
+        idToCity = new HashMap<String,String>();
+        placesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    snapshotPlace = snapshot.getValue(Places.class);
+                    idToCity.put(snapshotPlace.getId(),snapshotPlace.getAddress());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         StorageReference riversRef = storageRef.child(userId + "/" + "profile_image.jpg");
         riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -203,7 +226,7 @@ public class ProfileFragment extends Fragment {
                 firstName.setText(snapshot.getFirst_name());
                 lastName.setText(snapshot.getLast_name());
                 email.setText(userEmail);
-                place.setText(snapshot.getPlace_id());
+                place.setText(idToCity.get(snapshot.getPlace_id()));
             }
 
             @Override
@@ -211,6 +234,7 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+
     }
 
     private void showAlertDialog(final int n, String str){
