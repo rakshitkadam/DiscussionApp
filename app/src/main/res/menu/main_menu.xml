@@ -7,8 +7,8 @@
         android:title="@string/menu_profile"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/menu_notifications"
-        android:title="@string/menu_settings"
+        android:id="@+id/menu_report"
+        android:title="@string/report"
         app:showAsAction="never"/>
     <item
         android:id="@+id/menu_logout"

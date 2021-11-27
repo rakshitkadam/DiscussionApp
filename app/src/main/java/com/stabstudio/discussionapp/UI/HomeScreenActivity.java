@@ -3,6 +3,7 @@ package com.stabstudio.discussionapp.UI;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 
@@ -39,7 +40,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.stabstudio.discussionapp.Fragments.DiscussionFragment;
 import com.stabstudio.discussionapp.Fragments.ProfileFragment;
-import com.stabstudio.discussionapp.Fragments.SettingsFragment;
 import com.stabstudio.discussionapp.Models.User;
 import com.stabstudio.discussionapp.R;
 
@@ -63,8 +63,8 @@ public class HomeScreenActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private String userId;
     private GoogleApiClient mGoogleApiClient;
-    private DatabaseReference
-            mDatabaseRef;
+    private DatabaseReference mDatabaseRef;
+    private String officialAddress;
     private StorageReference mStorageRef;
     private SharedPreferences pref;
 
@@ -86,7 +86,7 @@ public class HomeScreenActivity extends AppCompatActivity {
 
         pref = getSharedPreferences("MetaData", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = pref.edit();
-
+        officialAddress = "yourSchoolEmail@gmail.com";
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -175,7 +175,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         adapter.addFragment(new DiscussionFragment(), "Discussions");
         adapter.addFragment(new ProfileFragment(), "Profile");
         viewPager.setAdapter(adapter);
-        Log.d("fffffffd", "196"  );
+
     }
 
     @Override
@@ -190,8 +190,8 @@ public class HomeScreenActivity extends AppCompatActivity {
             case R.id.menu_profile:
                 viewPager.setCurrentItem(1, true);
                 break;
-            case R.id.menu_notifications:
-                viewPager.setCurrentItem(2, true);
+            case R.id.menu_report:
+                 composeEmail();
                 break;
             case R.id.menu_logout:
                 auth.signOut();
@@ -243,6 +243,14 @@ public class HomeScreenActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitles.get(position);
         }
+    }
+    public void composeEmail() {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto",officialAddress, null));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Body");
+        startActivity(Intent.createChooser(emailIntent, "Send email..."));
+
     }
 
 }

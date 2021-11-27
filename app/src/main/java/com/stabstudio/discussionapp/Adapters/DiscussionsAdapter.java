@@ -68,9 +68,7 @@ public class DiscussionsAdapter extends RecyclerView.Adapter<DiscussionsAdapter.
 
         String timeStamp = tempDiscussion.getTimestamp();
         holder.subjectText.setText(subject);
-        holder.likesNo.setText(String.valueOf(likes));
-        holder.commentsNo.setText(String.valueOf(comments));
-        getUsernameAndPlace(holder, userId, placeId);
+        getUsername(holder, userId, placeId);
 
         calculateTimeAGO(holder, timeStamp);
 
@@ -85,36 +83,16 @@ public class DiscussionsAdapter extends RecyclerView.Adapter<DiscussionsAdapter.
             }
         });
 
-        holder.likeIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //String likes = holder.likesNo.getText().toString();
-                discussionList.get(position).incrementLike();
-                notifyDataSetChanged();
-            }
-        });
     }
 
-    private void getUsernameAndPlace(final ViewHolder holder, final String userId, final String placeId){
+    private void getUsername(final ViewHolder holder, final String userId, final String placeId){
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        placeRef = FirebaseDatabase.getInstance().getReference().child("Places");
 
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.child(userId).getValue(User.class);
                 holder.userName.setText(user.getFirst_name() + " " + user.getLast_name());
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        placeRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                Places place = dataSnapshot.child(placeId).getValue(Places.class);
-                holder.address.setText(place.getAddress());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -186,10 +164,7 @@ public class DiscussionsAdapter extends RecyclerView.Adapter<DiscussionsAdapter.
             subjectText = (TextView) view.findViewById(R.id.dis_subject);
             userName = (TextView) view.findViewById(R.id.dis_author);
             timeText = (TextView) view.findViewById(R.id.dis_timestamp);
-            address = (TextView) view.findViewById(R.id.dis_address);
-            likesNo = (TextView) view.findViewById(R.id.like_count);
-            commentsNo = (TextView) view.findViewById(R.id.comment_count);
-            likeIcon = (ImageView) view.findViewById(R.id.like_icon);
+//            address = (TextView) view.findViewById(R.id.dis_address);
         }
     }
 

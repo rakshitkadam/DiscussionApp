@@ -67,7 +67,7 @@
 
     <string name="menu_night_mode">Night mode</string>
     <string name="menu_profile">Profile</string>
-    <string name="menu_settings">Settings</string>
+    <string name="report">Report</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_night_mode_auto">Auto</string>
 

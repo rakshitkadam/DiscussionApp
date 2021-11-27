@@ -68,12 +68,12 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.first_name) TextView firstName;
     @BindView(R.id.last_name) TextView lastName;
     @BindView(R.id.user_email) TextView email;
-    @BindView(R.id.user_phone) TextView phone;
+    @BindView(R.id.user_place) TextView place;
     @BindView(R.id.profileimg) ImageView profilePic;
     @BindView(R.id.ll1) LinearLayout firstNameLl;
     @BindView(R.id.ll2) LinearLayout lastNameLl;
     @BindView(R.id.ll3) LinearLayout emailLl;
-    @BindView(R.id.ll4) LinearLayout phoneLl;
+    @BindView(R.id.ll4) LinearLayout placeLl;
     @BindView(R.id.ll6) LinearLayout logoutLl;
 
     private User snapshot;
@@ -143,10 +143,10 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        phoneLl.setOnClickListener(new View.OnClickListener() {
+        placeLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAlertDialog(3, phone.getText().toString());
+                showAlertDialog(3, place.getText().toString());
             }
         });
 
@@ -203,7 +203,7 @@ public class ProfileFragment extends Fragment {
                 firstName.setText(snapshot.getFirst_name());
                 lastName.setText(snapshot.getLast_name());
                 email.setText(userEmail);
-                phone.setText(snapshot.getPhoneNo());
+                place.setText(snapshot.getPlace_id());
             }
 
             @Override
@@ -245,44 +245,6 @@ public class ProfileFragment extends Fragment {
         dialog.show();
     }
 
-    private void createDatabaseEntries(){
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
-        databaseRef = FirebaseDatabase.getInstance().getReference();
-        storageRef = FirebaseStorage.getInstance().getReference();
-
-        usersRef = databaseRef.child("Users");
-        placesRef = databaseRef.child("Places");
-        discussionsRef = databaseRef.child("Discussions");
-
-        String place1 = "449 Palo Verde Road, Gainesville, FL";
-        String place2 = "6731 Thompson Street, Gainesville, FL";
-        String place3 = "8771 Thomas Boulevard, Orlando, FL";
-        String place4 = "1234 Verano Place, Orlando, FL";
-
-        String place_id_1 = placesRef.push().getKey();
-        Places p1 = new Places(place_id_1, place1);
-        placesRef.child(place_id_1).setValue(p1);
-
-        String place_id_2 = placesRef.push().getKey();
-        Places p2 = new Places(place_id_2, place2);
-        placesRef.child(place_id_2).setValue(p2);
-
-        String place_id_3 = placesRef.push().getKey();
-        Places p3 = new Places(place_id_3, place3);
-        placesRef.child(place_id_3).setValue(p3);
-
-        String place_id_4 = placesRef.push().getKey();
-        Places p4 = new Places(place_id_4, place4);
-        placesRef.child(place_id_4).setValue(p4);
-
-        for(int i = 0; i < 30; i++){
-            String id = discussionsRef.push().getKey();
-            //Discussion temp = new Discussion(id, "Palo Alto, California", "Matt Franco", "Time to clean the streets", "", "", "11 minutes ago", 150, 50);
-            //discussionsRef.child(id).setValue(temp);
-        }
-    }
-
     @Override
     public void onStart() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -303,12 +265,6 @@ public class ProfileFragment extends Fragment {
             imageFile = data.getData();
             uploadImage();
             Glide.with(getActivity()).load(imageFile).into(profilePic);
-            /*try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageFile);
-                profilePic.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
         }
     }
 
@@ -325,21 +281,17 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            //Toast.makeText(getActivity(), "File Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            //Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            //double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                            //progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
                         }
                     });
         }

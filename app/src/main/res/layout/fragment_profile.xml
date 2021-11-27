@@ -172,16 +172,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
-                android:text="Phone"
+                android:text="Place"
                 android:textColor="#F27227"
                 android:layout_gravity="center_vertical"
                 android:textSize="18dp"/>
 
             <TextView
-                android:id="@+id/user_phone"
+                android:id="@+id/user_place"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="7540881104"
+                android:text="Pune"
                 android:layout_weight=".1"
                 android:textColor="#000"
                 android:layout_gravity="center_vertical"
