@@ -103,7 +103,6 @@ public class PlaceAutocompleteActivity extends AppCompatActivity {
 
                 String user_id = firebaseUser.getUid();
                 String place_id = placesList.get(position).getId();
-                Log.e("Weird",place_id);
                 String photoUrl = firebaseUser.getPhotoUrl().toString();
                 String[] name = firebaseUser.getDisplayName().split(" ");
                 String first_name = name[0];
